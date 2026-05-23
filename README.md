@@ -18,18 +18,29 @@ The main goal is not only to compute the final path, but also to make the search
 
 ![BFS Search Animation](results/bfs_search.gif)
 
+### Dijkstra Search Result
+
+![Dijkstra Search Preview](results/dijkstra_search_preview.png)
+
+### Dijkstra Search Animation
+
+![Dijkstra Search Animation](results/dijkstra_search.gif)
+
 ## Current Status
 
 The project currently includes:
 
 - a demo grid map with obstacles, start, and goal cells
 - Breadth-First Search implementation
-- BFS search-state tracking
+- Dijkstra Search implementation
+- search-state tracking for both algorithms
 - static visualization of the final BFS search result
+- static visualization of the final Dijkstra search result
 - animated GIF showing the BFS exploration process
+- animated GIF showing the Dijkstra exploration process
 - path reconstruction visualization after the goal is found
 
-## Implemented Algorithm
+## Implemented Algorithms
 
 ### Breadth-First Search
 
@@ -41,11 +52,20 @@ BFS explores the grid level by level from the start cell. In this project, each 
 - the final reconstructed path
 - whether the goal has been found
 
-This makes it possible to visualize how the algorithm searches before it reaches the goal.
+### Dijkstra Search
+
+Dijkstra explores the grid based on the current shortest known path cost. In the current uniform-cost grid, its final path can look similar to BFS, but it provides the foundation for future weighted-grid experiments.
+
+Each search step records:
+
+- the current cell being expanded
+- visited cells
+- frontier cells
+- the final reconstructed path
+- whether the goal has been found
 
 ## Planned Algorithms
 
-- Dijkstra Search
 - Greedy Best-First Search
 - A* Search
 
@@ -82,13 +102,17 @@ robot-path-planning-visualizer/
 ├── results/
 │   ├── grid_preview.png
 │   ├── bfs_search_preview.png
-│   └── bfs_search.gif
+│   ├── bfs_search.gif
+│   ├── dijkstra_search_preview.png
+│   └── dijkstra_search.gif
 ├── src/
 │   ├── grid_map.py
 │   ├── preview_grid.py
 │   ├── search_algorithms.py
 │   ├── run_bfs_demo.py
-│   └── run_bfs_animation.py
+│   ├── run_bfs_animation.py
+│   ├── run_dijkstra_demo.py
+│   └── run_dijkstra_animation.py
 ├── .gitignore
 ├── README.md
 └── requirements.txt
@@ -110,3 +134,11 @@ python src/run_bfs_demo.py
 Generate the BFS animation:
 
 python src/run_bfs_animation.py
+
+Generate the Dijkstra static visualization:
+
+python src/run_dijkstra_demo.py
+
+Generate the Dijkstra animation:
+
+python src/run_dijkstra_animation.py

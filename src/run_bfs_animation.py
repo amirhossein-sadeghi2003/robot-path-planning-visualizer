@@ -133,7 +133,7 @@ def main():
     images = [imageio.imread(frame_path) for frame_path in frame_paths]
 
     gif_path = output_dir / "bfs_search.gif"
-    imageio.mimsave(gif_path, images, duration=0.18)
+    imageio.mimsave(gif_path, images, duration=0.18, loop=0)
 
     shutil.rmtree(frame_dir)
 

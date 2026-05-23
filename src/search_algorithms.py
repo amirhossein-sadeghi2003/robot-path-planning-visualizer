@@ -105,3 +105,73 @@ def bfs_search(grid: GridMap) -> List[SearchStep]:
     )
 
     return steps
+
+
+def dijkstra_search(grid: GridMap) -> List[SearchStep]:
+    import heapq
+
+    heap = [(0, grid.start)]
+    visited = set()
+    parent = {grid.start: None}
+    distance = {grid.start: 0}
+
+    steps = [
+        SearchStep(
+            current=grid.start,
+            visited=set(),
+            frontier={grid.start},
+            path=[],
+            found=False,
+        )
+    ]
+
+    while heap:
+        current_distance, current = heapq.heappop(heap)
+
+        if current in visited:
+            continue
+
+        visited.add(current)
+
+        if current == grid.goal:
+            path = rebuild_path(parent, grid.goal)
+            steps.append(
+                SearchStep(
+                    current=current,
+                    visited=set(visited),
+                    frontier=set(cell for _, cell in heap if cell not in visited),
+                    path=path,
+                    found=True,
+                )
+            )
+            return steps
+
+        for neighbor in get_neighbors(current, grid):
+            new_distance = current_distance + 1
+
+            if neighbor not in distance or new_distance < distance[neighbor]:
+                distance[neighbor] = new_distance
+                parent[neighbor] = current
+                heapq.heappush(heap, (new_distance, neighbor))
+
+        steps.append(
+            SearchStep(
+                current=current,
+                visited=set(visited),
+                frontier=set(cell for _, cell in heap if cell not in visited),
+                path=[],
+                found=False,
+            )
+        )
+
+    steps.append(
+        SearchStep(
+            current=None,
+            visited=set(visited),
+            frontier=set(),
+            path=[],
+            found=False,
+        )
+    )
+
+    return steps

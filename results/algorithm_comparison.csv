@@ -1,4 +1,4 @@
-algorithm,found,path_length_cells,path_cost,visited_cells,search_steps
-BFS,True,24,23,163,161
-Dijkstra,True,24,23,160,161
+algorithm,found,path_length_cells,weighted_path_cost,visited_cells,search_steps
+BFS,True,24,31,163,161
+Dijkstra,True,24,31,160,161
 Weighted Dijkstra,True,24,23,157,158

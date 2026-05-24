@@ -4,6 +4,7 @@ import pandas as pd
 from grid_map import build_demo_grid
 from search_algorithms import (
     astar_search,
+    astar_weighted_search,
     bfs_search,
     dijkstra_search,
     dijkstra_weighted_search,
@@ -42,6 +43,7 @@ def main():
         summarize("Weighted Dijkstra", dijkstra_weighted_search(weighted_grid), weighted_grid),
         summarize("Greedy Best-First", greedy_best_first_search(grid), weighted_grid),
         summarize("A*", astar_search(grid), weighted_grid),
+        summarize("Weighted A*", astar_weighted_search(weighted_grid), weighted_grid),
     ]
 
     df = pd.DataFrame(rows)

@@ -4,3 +4,4 @@ Dijkstra,True,24,31,160,161
 Weighted Dijkstra,True,24,23,157,158
 Greedy Best-First,True,30,45,34,35
 A*,True,24,31,137,138
+Weighted A*,True,24,23,112,113

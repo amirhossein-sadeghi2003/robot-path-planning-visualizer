@@ -8,6 +8,21 @@ from run_bfs_demo import COLOR_MAP, build_visual_matrix
 from search_algorithms import greedy_best_first_search
 
 
+def add_legend(ax):
+    legend_items = [
+        plt.Line2D([0], [0], marker="s", color="w", label="Free", markerfacecolor="#ffffff", markeredgecolor="gray", markersize=10),
+        plt.Line2D([0], [0], marker="s", color="w", label="Obstacle", markerfacecolor="#222222", markersize=10),
+        plt.Line2D([0], [0], marker="s", color="w", label="Start", markerfacecolor="#2ecc71", markersize=10),
+        plt.Line2D([0], [0], marker="s", color="w", label="Goal", markerfacecolor="#e74c3c", markersize=10),
+        plt.Line2D([0], [0], marker="s", color="w", label="Visited", markerfacecolor="#85c1e9", markersize=10),
+        plt.Line2D([0], [0], marker="s", color="w", label="Frontier", markerfacecolor="#f7dc6f", markersize=10),
+        plt.Line2D([0], [0], marker="s", color="w", label="Current", markerfacecolor="#af7ac5", markersize=10),
+        plt.Line2D([0], [0], marker="s", color="w", label="Path", markerfacecolor="#f06292", markersize=10),
+    ]
+
+    ax.legend(handles=legend_items, loc="upper right", bbox_to_anchor=(1.18, 1.0))
+
+
 def draw_search_step(grid, step, output_path):
     matrix = build_visual_matrix(grid, step)
 
@@ -35,6 +50,8 @@ def draw_search_step(grid, step, output_path):
 
     for spine in ax.spines.values():
         spine.set_visible(False)
+
+    add_legend(ax)
 
     plt.tight_layout()
     os.makedirs("results", exist_ok=True)

@@ -1,0 +1,68 @@
+import os
+
+import matplotlib.pyplot as plt
+from matplotlib.colors import BoundaryNorm
+
+from grid_map import build_demo_grid
+from run_bfs_demo import COLOR_MAP, build_visual_matrix
+from run_greedy_demo import add_legend
+from search_algorithms import astar_search
+
+
+def draw_search_step(grid, step, output_path):
+    matrix = build_visual_matrix(grid, step)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    norm = BoundaryNorm(
+        boundaries=[-0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5],
+        ncolors=COLOR_MAP.N,
+    )
+
+    ax.imshow(matrix, cmap=COLOR_MAP, norm=norm)
+
+    ax.set_xticks(range(grid.cols))
+    ax.set_yticks(range(grid.rows))
+    ax.set_xticklabels(range(grid.cols))
+    ax.set_yticklabels(range(grid.rows))
+
+    ax.set_xticks([x - 0.5 for x in range(1, grid.cols)], minor=True)
+    ax.set_yticks([y - 0.5 for y in range(1, grid.rows)], minor=True)
+    ax.grid(which="minor", color="lightgray", linestyle="-", linewidth=1)
+
+    ax.set_title("A* Search Visualization")
+    ax.set_xlabel("Column")
+    ax.set_ylabel("Row")
+
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
+    add_legend(ax)
+
+    plt.tight_layout()
+    os.makedirs("results", exist_ok=True)
+    plt.savefig(output_path, dpi=150)
+    plt.close()
+
+
+def main():
+    grid = build_demo_grid()
+
+    steps = astar_search(grid)
+    final_step = steps[-1]
+
+    draw_search_step(
+        grid=grid,
+        step=final_step,
+        output_path="results/astar_search_preview.png",
+    )
+
+    print("Saved: results/astar_search_preview.png")
+    print(f"Search steps: {len(steps)}")
+    print(f"Path found: {final_step.found}")
+    print(f"Path length: {len(final_step.path)}")
+    print(f"Visited cells: {len(final_step.visited)}")
+
+
+if __name__ == "__main__":
+    main()

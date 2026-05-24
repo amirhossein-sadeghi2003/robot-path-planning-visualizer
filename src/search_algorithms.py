@@ -398,3 +398,81 @@ def astar_search(grid: GridMap) -> List[SearchStep]:
     )
 
     return steps
+
+
+def astar_weighted_search(weighted_grid) -> List[SearchStep]:
+    import heapq
+
+    grid = weighted_grid.grid
+
+    heap = [(0, 0, grid.start)]
+    visited = set()
+    parent = {grid.start: None}
+    g_score = {grid.start: 0}
+
+    steps = [
+        SearchStep(
+            current=grid.start,
+            visited=set(),
+            frontier={grid.start},
+            path=[],
+            found=False,
+        )
+    ]
+
+    while heap:
+        _, current_cost, current = heapq.heappop(heap)
+
+        if current in visited:
+            continue
+
+        visited.add(current)
+
+        if current == grid.goal:
+            path = rebuild_path(parent, grid.goal)
+
+            steps.append(
+                SearchStep(
+                    current=current,
+                    visited=set(visited),
+                    frontier=set(cell for _, _, cell in heap if cell not in visited),
+                    path=path,
+                    found=True,
+                )
+            )
+
+            return steps
+
+        for neighbor in get_neighbors(current, grid):
+            tentative_g = current_cost + weighted_grid.cost(neighbor)
+
+            if neighbor not in g_score or tentative_g < g_score[neighbor]:
+                parent[neighbor] = current
+                g_score[neighbor] = tentative_g
+
+                heuristic = manhattan_distance(neighbor, grid.goal)
+                f_score = tentative_g + heuristic
+
+                heapq.heappush(heap, (f_score, tentative_g, neighbor))
+
+        steps.append(
+            SearchStep(
+                current=current,
+                visited=set(visited),
+                frontier=set(cell for _, _, cell in heap if cell not in visited),
+                path=[],
+                found=False,
+            )
+        )
+
+    steps.append(
+        SearchStep(
+            current=None,
+            visited=set(visited),
+            frontier=set(),
+            path=[],
+            found=False,
+        )
+    )
+
+    return steps

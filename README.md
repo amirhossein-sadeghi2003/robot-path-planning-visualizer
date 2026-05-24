@@ -38,6 +38,22 @@ The main goal is not only to compute the final path, but also to make the search
 
 ![Weighted Dijkstra Search Animation](results/weighted_dijkstra_search.gif)
 
+### Greedy Best-First Search Result
+
+![Greedy Search Preview](results/greedy_search_preview.png)
+
+### Greedy Best-First Search Animation
+
+![Greedy Search Animation](results/greedy_search.gif)
+
+### A* Search Result
+
+![A* Search Preview](results/astar_search_preview.png)
+
+### A* Search Animation
+
+![A* Search Animation](results/astar_search.gif)
+
 ## Current Status
 
 The project currently includes:
@@ -47,38 +63,27 @@ The project currently includes:
 - Breadth-First Search implementation
 - Dijkstra Search implementation
 - weighted Dijkstra Search implementation
+- Greedy Best-First Search implementation
+- A* Search implementation
 - search-state tracking for implemented algorithms
 - static visualizations of search results
 - animated GIFs showing the exploration process
 - path reconstruction visualization after the goal is found
+- algorithm comparison metrics using weighted path cost
 
 ## Implemented Algorithms
 
 ### Breadth-First Search
 
-BFS explores the grid level by level from the start cell. In this project, each search step records:
+BFS explores the grid level by level from the start cell.
 
-- the current cell being expanded
-- visited cells
-- frontier cells
-- the final reconstructed path
-- whether the goal has been found
-
-BFS treats every valid move as having the same cost.
+It treats every valid move as having the same cost, so it is useful as an unweighted baseline.
 
 ### Dijkstra Search
 
 Dijkstra explores the grid based on the current shortest known path cost.
 
-On a uniform-cost grid, its final path can look similar to BFS. On a weighted grid, Dijkstra can prefer a longer path with lower total cost instead of the shortest path in number of steps.
-
-Each search step records:
-
-- the current cell being expanded
-- visited cells
-- frontier cells
-- the final reconstructed path
-- whether the goal has been found
+On a uniform-cost grid, its final path can look similar to BFS. On a weighted grid, Dijkstra can prefer a lower-cost path even if the route is not visually the most direct one.
 
 ### Weighted Dijkstra Search
 
@@ -86,10 +91,25 @@ The weighted version uses a cost map where some cells are more expensive to cros
 
 This makes the difference between shortest path and lowest-cost path more visible.
 
-## Planned Algorithms
+### Greedy Best-First Search
 
-- Greedy Best-First Search
-- A* Search
+Greedy Best-First Search uses a heuristic to move toward the goal.
+
+It can explore fewer cells than BFS, but it does not guarantee the lowest-cost or shortest path because it focuses mainly on estimated closeness to the goal.
+
+### A* Search
+
+A* combines the cost already traveled with a heuristic estimate to the goal.
+
+It is more informed than BFS and Dijkstra on an unweighted grid, and more balanced than Greedy Best-First Search.
+
+## Planned Improvements
+
+- weighted A* Search
+- side-by-side algorithm comparison
+- comparison charts for visited cells, path cost, and search steps
+- cleaner shared visualization utilities
+- optional interactive version
 
 ## Visual Features
 
@@ -130,19 +150,29 @@ robot-path-planning-visualizer/
 │   ├── dijkstra_search_preview.png
 │   ├── dijkstra_search.gif
 │   ├── weighted_dijkstra_search_preview.png
-│   └── weighted_dijkstra_search.gif
+│   ├── weighted_dijkstra_search.gif
+│   ├── greedy_search_preview.png
+│   ├── greedy_search.gif
+│   ├── astar_search_preview.png
+│   ├── astar_search.gif
+│   └── algorithm_comparison.csv
 ├── src/
 │   ├── grid_map.py
 │   ├── weighted_grid.py
 │   ├── preview_grid.py
 │   ├── preview_weighted_grid.py
 │   ├── search_algorithms.py
+│   ├── compare_algorithms.py
 │   ├── run_bfs_demo.py
 │   ├── run_bfs_animation.py
 │   ├── run_dijkstra_demo.py
 │   ├── run_dijkstra_animation.py
 │   ├── run_weighted_dijkstra_demo.py
-│   └── run_weighted_dijkstra_animation.py
+│   ├── run_weighted_dijkstra_animation.py
+│   ├── run_greedy_demo.py
+│   ├── run_greedy_animation.py
+│   ├── run_astar_demo.py
+│   └── run_astar_animation.py
 ├── .gitignore
 ├── README.md
 └── requirements.txt
@@ -161,26 +191,31 @@ Generate the weighted grid preview:
 
 python src/preview_weighted_grid.py
 
-Generate the BFS static visualization:
+Generate BFS outputs:
 
 python src/run_bfs_demo.py
-
-Generate the BFS animation:
-
 python src/run_bfs_animation.py
 
-Generate the Dijkstra static visualization:
+Generate Dijkstra outputs:
 
 python src/run_dijkstra_demo.py
-
-Generate the Dijkstra animation:
-
 python src/run_dijkstra_animation.py
 
-Generate the weighted Dijkstra static visualization:
+Generate weighted Dijkstra outputs:
 
 python src/run_weighted_dijkstra_demo.py
-
-Generate the weighted Dijkstra animation:
-
 python src/run_weighted_dijkstra_animation.py
+
+Generate Greedy Best-First outputs:
+
+python src/run_greedy_demo.py
+python src/run_greedy_animation.py
+
+Generate A* outputs:
+
+python src/run_astar_demo.py
+python src/run_astar_animation.py
+
+Generate algorithm comparison metrics:
+
+python src/compare_algorithms.py

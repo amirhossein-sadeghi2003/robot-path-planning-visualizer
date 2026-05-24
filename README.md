@@ -103,6 +103,24 @@ A* combines the cost already traveled with a heuristic estimate to the goal.
 
 It is more informed than BFS and Dijkstra on an unweighted grid, and more balanced than Greedy Best-First Search.
 
+## Algorithm Comparison
+
+The project also generates a CSV file with comparison metrics:
+
+`results/algorithm_comparison.csv`
+
+Current comparison result:
+
+| Algorithm | Path length | Weighted path cost | Visited cells | Search steps |
+|---|---:|---:|---:|---:|
+| BFS | 24 | 31 | 163 | 161 |
+| Dijkstra | 24 | 31 | 160 | 161 |
+| Weighted Dijkstra | 24 | 23 | 157 | 158 |
+| Greedy Best-First | 30 | 45 | 34 | 35 |
+| A* | 24 | 31 | 137 | 138 |
+
+The comparison shows that Greedy Best-First explores fewer cells, but produces a higher-cost path. Weighted Dijkstra gives the lowest weighted path cost on the current cost map.
+
 ## Planned Improvements
 
 - weighted A* Search

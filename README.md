@@ -54,6 +54,14 @@ The main goal is not only to compute the final path, but also to make the search
 
 ![A* Search Animation](results/astar_search.gif)
 
+### Weighted A* Search Result
+
+![Weighted A* Search Preview](results/weighted_astar_search_preview.png)
+
+### Weighted A* Search Animation
+
+![Weighted A* Search Animation](results/weighted_astar_search.gif)
+
 ## Current Status
 
 The project currently includes:
@@ -65,6 +73,7 @@ The project currently includes:
 - weighted Dijkstra Search implementation
 - Greedy Best-First Search implementation
 - A* Search implementation
+- weighted A* Search implementation
 - search-state tracking for implemented algorithms
 - static visualizations of search results
 - animated GIFs showing the exploration process
@@ -118,12 +127,12 @@ Current comparison result:
 | Weighted Dijkstra | 24 | 23 | 157 | 158 |
 | Greedy Best-First | 30 | 45 | 34 | 35 |
 | A* | 24 | 31 | 137 | 138 |
+| Weighted A* | 24 | 23 | 112 | 113 |
 
-The comparison shows that Greedy Best-First explores fewer cells, but produces a higher-cost path. Weighted Dijkstra gives the lowest weighted path cost on the current cost map.
+The comparison shows that Greedy Best-First explores fewer cells, but produces a higher-cost path. Weighted Dijkstra and Weighted A* both reach the lowest weighted path cost on the current cost map, while Weighted A* explores fewer cells.
 
 ## Planned Improvements
 
-- weighted A* Search
 - side-by-side algorithm comparison
 - comparison charts for visited cells, path cost, and search steps
 - cleaner shared visualization utilities
@@ -233,6 +242,11 @@ Generate A* outputs:
 
 python src/run_astar_demo.py
 python src/run_astar_animation.py
+
+Generate weighted A* outputs:
+
+python src/run_weighted_astar_demo.py
+python src/run_weighted_astar_animation.py
 
 Generate algorithm comparison metrics:
 

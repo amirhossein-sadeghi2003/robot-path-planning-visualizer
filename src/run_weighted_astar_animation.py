@@ -1,0 +1,146 @@
+import os
+import shutil
+from pathlib import Path
+
+import imageio.v2 as imageio
+import matplotlib.pyplot as plt
+from matplotlib.colors import BoundaryNorm
+
+from search_algorithms import SearchStep, astar_weighted_search
+from weighted_grid import build_demo_weighted_grid
+from run_weighted_astar_demo import COLOR_MAP, build_visual_matrix, add_legend
+
+
+def draw_frame(weighted_grid, step, output_path, frame_number, total_frames, phase_name):
+    grid = weighted_grid.grid
+    matrix = build_visual_matrix(weighted_grid, step)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    norm = BoundaryNorm(
+        boundaries=[-0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5],
+        ncolors=COLOR_MAP.N,
+    )
+
+    ax.imshow(matrix, cmap=COLOR_MAP, norm=norm)
+
+    ax.set_xticks(range(grid.cols))
+    ax.set_yticks(range(grid.rows))
+    ax.set_xticklabels(range(grid.cols))
+    ax.set_yticklabels(range(grid.rows))
+
+    ax.set_xticks([x - 0.5 for x in range(1, grid.cols)], minor=True)
+    ax.set_yticks([y - 0.5 for y in range(1, grid.rows)], minor=True)
+    ax.grid(which="minor", color="lightgray", linestyle="-", linewidth=1)
+
+    title = f"Weighted A* {phase_name} - Frame {frame_number}/{total_frames}"
+    ax.set_title(title)
+    ax.set_xlabel("Column")
+    ax.set_ylabel("Row")
+
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
+    add_legend(ax)
+
+    plt.tight_layout()
+    plt.savefig(output_path, dpi=120)
+    plt.close()
+
+
+def select_search_steps(steps, stride=4):
+    selected = steps[::stride]
+
+    if selected[-1] != steps[-1]:
+        selected.append(steps[-1])
+
+    return selected
+
+
+def build_path_reconstruction_steps(final_step):
+    path_steps = []
+
+    for i in range(1, len(final_step.path) + 1):
+        partial_path = final_step.path[:i]
+
+        step = SearchStep(
+            current=final_step.path[i - 1],
+            visited=set(final_step.visited),
+            frontier=set(),
+            path=partial_path,
+            found=True,
+        )
+
+        path_steps.append(step)
+
+    return path_steps
+
+
+def path_cost(weighted_grid, path):
+    if not path:
+        return 0
+
+    return sum(weighted_grid.cost(cell) for cell in path[1:])
+
+
+def main():
+    weighted_grid = build_demo_weighted_grid()
+    steps = astar_weighted_search(weighted_grid)
+
+    search_steps = select_search_steps(steps, stride=4)
+    final_step = steps[-1]
+    path_steps = build_path_reconstruction_steps(final_step)
+
+    output_dir = Path("results")
+    frame_dir = output_dir / "weighted_astar_frames"
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    if frame_dir.exists():
+        shutil.rmtree(frame_dir)
+
+    frame_dir.mkdir(parents=True)
+
+    frame_paths = []
+    combined_steps = []
+
+    for step in search_steps:
+        combined_steps.append((step, "Search Phase"))
+
+    for step in path_steps:
+        combined_steps.append((step, "Path Reconstruction Phase"))
+
+    total_frames = len(combined_steps)
+
+    for index, (step, phase_name) in enumerate(combined_steps, start=1):
+        frame_path = frame_dir / f"frame_{index:03d}.png"
+        draw_frame(
+            weighted_grid=weighted_grid,
+            step=step,
+            output_path=frame_path,
+            frame_number=index,
+            total_frames=total_frames,
+            phase_name=phase_name,
+        )
+        frame_paths.append(frame_path)
+
+    images = [imageio.imread(frame_path) for frame_path in frame_paths]
+
+    gif_path = output_dir / "weighted_astar_search.gif"
+    imageio.mimsave(gif_path, images, duration=0.18, loop=0)
+
+    shutil.rmtree(frame_dir)
+
+    print(f"Saved: {gif_path}")
+    print(f"Original search steps: {len(steps)}")
+    print(f"Search frames: {len(search_steps)}")
+    print(f"Path reconstruction frames: {len(path_steps)}")
+    print(f"Total animation frames: {len(combined_steps)}")
+    print(f"Path found: {final_step.found}")
+    print(f"Path length: {len(final_step.path)}")
+    print(f"Path cost: {path_cost(weighted_grid, final_step.path)}")
+    print(f"Visited cells: {len(final_step.visited)}")
+
+
+if __name__ == "__main__":
+    main()

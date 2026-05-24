@@ -247,3 +247,78 @@ def dijkstra_weighted_search(weighted_grid) -> List[SearchStep]:
     )
 
     return steps
+
+
+def manhattan_distance(a: Cell, b: Cell) -> int:
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+
+def greedy_best_first_search(grid: GridMap) -> List[SearchStep]:
+    import heapq
+
+    heap = [(0, grid.start)]
+    visited = set()
+    parent = {grid.start: None}
+
+    steps = [
+        SearchStep(
+            current=grid.start,
+            visited=set(),
+            frontier={grid.start},
+            path=[],
+            found=False,
+        )
+    ]
+
+    while heap:
+        _, current = heapq.heappop(heap)
+
+        if current in visited:
+            continue
+
+        visited.add(current)
+
+        if current == grid.goal:
+            path = rebuild_path(parent, grid.goal)
+
+            steps.append(
+                SearchStep(
+                    current=current,
+                    visited=set(visited),
+                    frontier=set(cell for _, cell in heap if cell not in visited),
+                    path=path,
+                    found=True,
+                )
+            )
+
+            return steps
+
+        for neighbor in get_neighbors(current, grid):
+            if neighbor not in visited:
+                parent[neighbor] = current
+
+                heuristic = manhattan_distance(neighbor, grid.goal)
+
+                heapq.heappush(heap, (heuristic, neighbor))
+
+        steps.append(
+            SearchStep(
+                current=current,
+                visited=set(visited),
+                frontier=set(cell for _, cell in heap if cell not in visited),
+                path=[],
+                found=False,
+            )
+        )
+
+    steps.append(
+        SearchStep(
+            current=None,
+            visited=set(visited),
+            frontier=set(),
+            path=[],
+            found=False,
+        )
+    )
+
+    return steps
